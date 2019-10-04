@@ -1,5 +1,36 @@
-- hosts: localhost
-  become: true
-  tasks:
-  - name: Install ruby
-    apt: name=ruby
+---
+  - name: DevOpsDeveloperLaptop
+    hosts: localhost
+    vars_files: vars/main.yml
+    become: true
+    
+    roles:
+      - role: ansiblebit.oracle-java
+      - role: gantsign.antigen
+
+    tasks:
+    - name: Update APT package manager repositories cache
+      apt:
+        update_cache: yes
+
+    - name: Install software properties
+      apt: 
+        name: software-properties-common 
+        state: latest
+
+    - name: Install ruby packages
+      apt: 
+        name: "{{ item }}"
+        state:  present
+      with_items: "{{ ruby_packages }}"
+
+    - name: Install OpenJDK Java
+      apt:
+        name: openjdk-8-jdk
+        state: present
+
+    - name: Install local_tools
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ local_tools }}"
