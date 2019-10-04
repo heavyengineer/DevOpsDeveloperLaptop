@@ -1,0 +1,5 @@
+- hosts: localhost
+  become: true
+  tasks:
+  - name: Install ruby
+    apt: name=ruby
